@@ -618,8 +618,13 @@ a:focus-visible, button:focus-visible{
 
     <section class="invitation-card" id="invitationCard">
       <span class="eyebrow">🐚 Fondo de Bikini te invita 🐚</span>
-      <h1 class="title">¡Estás invitado(a)!</h1>
-      <p class="subtitle">Te invito a celebrar mi fiesta.</p>
+      
+<h1 class="title">¡Estás invitado(a)!</h1>
+
+<img src="personaje.png" alt="Bob Esponja" style="display:block;margin:20px auto;width:240px;max-width:90%;filter:drop-shadow(0 10px 18px rgba(0,0,0,.35));">
+
+<p class="subtitle">Te invito a celebrar mi fiesta.</p>
+
 
       <div class="details">
         <div class="detail-item" style="--d:1">
@@ -677,4 +682,108 @@ a:focus-visible, button:focus-visible{
 
   </main>
 
-  <!-- Arena en la parte inferiors
+  <!-- Arena en la parte inferior -->
+  <div class="sand" aria-hidden="true">
+    <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
+      <path d="M0,40 C240,100 480,0 720,40 C960,80 1200,0 1440,40 L1440,120 L0,120 Z" fill="#dba94f"></path>
+    </svg>
+    <div class="sand-fill"></div>
+  </div>
+
+</div>
+
+<script>
+/* ===========================================================
+   GENERADOR DE BURBUJAS CONTINUAS
+   =========================================================== */
+(function inicializarBurbujas(){
+  var capa = document.getElementById('bubblesLayer');
+
+  function crearBurbuja(){
+    var burbuja = document.createElement('div');
+    burbuja.className = 'bubble';
+
+    var tamano = Math.random() * 34 + 8;        // entre 8px y 42px
+    var duracion = Math.random() * 8 + 6;        // entre 6s y 14s
+    var deriva = (Math.random() * 70 - 35);       // movimiento horizontal aleatorio
+
+    burbuja.style.width = tamano + 'px';
+    burbuja.style.height = tamano + 'px';
+    burbuja.style.left = Math.random() * 100 + '%';
+    burbuja.style.animationDuration = duracion + 's';
+    burbuja.style.setProperty('--drift', deriva + 'px');
+
+    capa.appendChild(burbuja);
+
+    // Limpieza: eliminar la burbuja del DOM cuando termina su animación
+    setTimeout(function(){
+      if (burbuja.parentNode) burbuja.parentNode.removeChild(burbuja);
+    }, duracion * 1000 + 300);
+  }
+
+  // Burbujas iniciales escalonadas para que no aparezcan todas de golpe
+  for (var i = 0; i < 10; i++){
+    setTimeout(crearBurbuja, i * 350);
+  }
+
+  // Generación continua de nuevas burbujas
+  setInterval(crearBurbuja, 750);
+})();
+
+/* ===========================================================
+   CONFIRMACIÓN DE ASISTENCIA (RSVP)
+   =========================================================== */
+(function inicializarRSVP(){
+  var boton = document.getElementById('rsvpBtn');
+  var mensaje = document.getElementById('rsvpMsg');
+  var confirmado = false;
+
+  boton.addEventListener('click', function(){
+    confirmado = !confirmado;
+    boton.classList.toggle('confirmado', confirmado);
+
+    if (confirmado){
+      boton.innerHTML = '<span class="btn-icon">🎉</span> ¡Asistencia confirmada!';
+      mensaje.textContent = '¡Genial! Nos vemos en Fondo de Bikini 🌊';
+      lanzarParticulasDeFiesta(boton);
+    } else {
+      boton.innerHTML = '<span class="btn-icon">✅</span> Confirmar asistencia';
+      mensaje.textContent = '';
+    }
+  });
+
+  // Pequeñas burbujas de celebración que salen del botón al confirmar
+  function lanzarParticulasDeFiesta(origen){
+    var rect = origen.getBoundingClientRect();
+    var colores = ['#ffd23f', '#ff6f59', '#2ec4b6', '#eafcff'];
+
+    for (var i = 0; i < 14; i++){
+      var particula = document.createElement('div');
+      particula.className = 'party-bubble';
+
+      var tamano = Math.random() * 10 + 6;
+      var angulo = Math.random() * Math.PI * 2;
+      var distancia = Math.random() * 110 + 50;
+
+      particula.style.width = tamano + 'px';
+      particula.style.height = tamano + 'px';
+      particula.style.left = (rect.left + rect.width / 2) + 'px';
+      particula.style.top = (rect.top + rect.height / 2) + 'px';
+      particula.style.background = colores[Math.floor(Math.random() * colores.length)];
+      particula.style.setProperty('--tx', Math.cos(angulo) * distancia + 'px');
+      particula.style.setProperty('--ty', (Math.sin(angulo) * distancia - 50) + 'px');
+
+      document.body.appendChild(particula);
+
+      (function(p){
+        setTimeout(function(){
+          if (p.parentNode) p.parentNode.removeChild(p);
+        }, 900);
+      })(particula);
+    }
+  }
+})();
+</script>
+
+</body>
+</html>
